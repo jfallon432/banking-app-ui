@@ -4,6 +4,7 @@ import {Button, FormControl, Input, InputLabel, makeStyles, Typography} from "@m
 import {useState} from "react";
 import {Redirect} from "react-router-dom";
 import {User} from "../models/user";
+import {save} from "../remote/register-service";
 
 interface IRegisterProps {
     errorMessage: string,
@@ -24,36 +25,24 @@ function RegisterComponent() {
     const classes = useStyles();
 
     // internal component state, need not be stored in global state
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [age, setAge] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
 
-    let updateUsername = (e: any) => {
-        setUsername(e.currentTarget.value);
-    }
-    let updatePassword = (e: any) => {
-        setPassword(e.currentTarget.value);
-    }
-    let updateEmail = (e: any) => {
-        setEmail(e.currentTarget.value);
-    }
-    let updateAge = (e: any) => {
-        setAge(e.currentTarget.value);
-    }
-    let updateFirstName = (e: any) => {
-        setFirstName(e.currentTarget.value);
-    }
-    let updateLastName = (e: any) => {
-        setLastName(e.currentTarget.value);
+    const[user, setUser] = useState({email: "", firstName: "", lastName: "", password: "", username: "", dob: new Date('0000-00-00')} as User)
+
+    const handleChange = (e: any) => {
+        e.preventDefault();
+        const {name, value} = e.currentTarget;
+        setUser({
+            ...user, [name]: value
+        });
     }
 
 
 
-    let register = async () => {
+    const register = async (e: any) => {
+       e.preventDefault();
         console.log('registration invoked!');
+        console.log(user)
+        const registeredUser = await save(user);
 
     }
 
@@ -67,42 +56,70 @@ function RegisterComponent() {
                 <FormControl margin="normal" fullWidth>
                     <InputLabel htmlFor="firstName">First Name</InputLabel>
                     <Input
-                        onChange={updateFirstName}
+                        onChange={handleChange}
                         id="firstName"
                         type="text"
                         placeholder="First Name"
+                        name={"firstName"}
                     />
                 </FormControl>
 
                 <FormControl margin="normal" fullWidth>
                     <InputLabel htmlFor="lastName">Last Name</InputLabel>
                     <Input
-                        onChange={updateLastName}
+                        onChange={handleChange}
                         id="lastName"
                         type="text"
                         placeholder="Last Name"
+                        name={"lastName"}
                     />
                 </FormControl>
 
                 <FormControl margin="normal" fullWidth>
-                    <InputLabel htmlFor="email">Last Name</InputLabel>
+                    <InputLabel htmlFor="email">Email</InputLabel>
                     <Input
-                        onChange={updateEmail}
+                        onChange={handleChange}
                         id="email"
                         type="text"
                         placeholder="Email"
+                        name={"email"}
+                    />
+                </FormControl>
+
+                <FormControl margin="normal" fullWidth>
+                    <InputLabel htmlFor="date">Date of Birth</InputLabel>
+                    <Input
+                        onChange={handleChange}
+                        id="dob"
+                        type="text"
+                        placeholder="Date of Birth"
+                        name={"dob"}
+                    />
+                </FormControl>
+
+                <FormControl margin="normal" fullWidth>
+                    <InputLabel htmlFor="username">Username</InputLabel>
+                    <Input
+                        onChange={handleChange}
+                        id="username"
+                        type="text"
+                        placeholder="Username"
+                        name={"username"}
                     />
                 </FormControl>
 
                 <FormControl margin="normal" fullWidth>
                     <InputLabel htmlFor="password">Password</InputLabel>
                     <Input
-                        onChange={updatePassword}
+                        onChange={handleChange}
                         id="password"
                         type="password"
                         placeholder="Password"
+                        name={"password"}
                     />
                 </FormControl>
+
+
                 <br/><br/>
                 <Button
                     id="register-button"

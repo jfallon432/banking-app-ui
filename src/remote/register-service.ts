@@ -1,5 +1,6 @@
 import { bankingClient } from './banking-client';
-export async function register(username: string, password: string) {
-    let response = await bankingClient.post('/register', {username, password});
+import {User} from "../models/user";
+export async function save(user: User) {
+    let response = await bankingClient.post('/user/register', user);
     return await response.data;
 }
